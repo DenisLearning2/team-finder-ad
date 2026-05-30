@@ -46,6 +46,60 @@
     });
   });
 
+  // Обработчик кнопки участия в проекте
+  document.addEventListener("DOMContentLoaded", () => {
+    const participateBtn = document.getElementById("participate-btn");
+    
+    if (participateBtn) {
+        participateBtn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            
+            const projectId = participateBtn.dataset.project;
+            
+            try {
+                const response = await fetch(`/projects/${projectId}/toggle-participate/`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": getCookie("csrftoken")
+                    },
+                    body: JSON.stringify({})
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.status === "ok") {
+                    // Обновляем текст кнопки
+                    if (data.participated) {
+                        participateBtn.textContent = "Отказаться от участия";
+                    } else {
+                        participateBtn.textContent = "Участвовать";
+                    }
+                    
+                    // Обновляем список участников
+                    if (data.participants_html) {
+                        const participantsList = document.getElementById("participants-list");
+                        if (participantsList) {
+                            participantsList.innerHTML = data.participants_html;
+                        }
+                    }
+                    
+                    // Обновляем счетчик участников
+                    const participantsCount = document.getElementById("participants-count");
+                    if (participantsCount) {
+                        participantsCount.textContent = data.participants_count;
+                    }
+                } else {
+                    alert(data.message || "Ошибка при участии в проекте");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Произошла ошибка. Попробуйте позже.");
+            }
+        });
+    }
+  });
+
   function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== "") {

@@ -1,3 +1,4 @@
+'''WSGI config for team_finder project.'''
 import os
 
 from django.core.wsgi import get_wsgi_application

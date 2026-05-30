@@ -1,14 +1,54 @@
+version: '3.8'
+
 services:
+  # База данных PostgreSQL
   db:
-    image: postgres:16
-    env_file:
-      - .env
+    image: postgres:15
     container_name: teamfinder_db
-    ports:
-      - "5432:5432"
+    restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: teamfinder
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Веб-приложение Django
+  web:
+    build: .
+    container_name: teamfinder_web
     restart: always
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             gunicorn team_finder.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - POSTGRES_DB=teamfinder
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - DJANGO_SECRET_KEY=your-secret-key-here-change-in-production
+      - DJANGO_DEBUG=False
+      - ALLOWED_HOSTS=localhost,127.0.0.1
+      - TASK_VERSION=1
 
 volumes:
   postgres_data:
+  static_volume:
+  media_volume:
