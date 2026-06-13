@@ -105,6 +105,7 @@ python manage.py runserver
 ```
 
 Теперь проект доступен по адресу [http://localhost:8000](http://localhost:8000). 
+Если Выдает ошибку Not Found: попробуйте [http://localhost:8080](http://localhost:8080). 
 Если видите ракету с надписью "The install worked successfully! Congratulations!", то запуск прошёл успешно, Django работает!
 Осталось всего ничего: реализовать весь проект!
 
