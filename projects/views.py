@@ -7,6 +7,7 @@ from django.views.decorators.http import require_http_methods
 from .models import Project
 from .forms import ProjectForm
 
+
 def project_list(request):
     """Главная страница со списком проектов"""
     # pylint: disable=no-member
@@ -21,6 +22,7 @@ def project_list(request):
         'is_paginated': projects_page.has_other_pages(),
     }
     return render(request, 'projects/project_list.html', context)
+
 
 def project_detail(request, project_id):
     """Страница проекта"""
@@ -38,6 +40,7 @@ def project_detail(request, project_id):
     }
     return render(request, 'projects/project-details.html', context)
 
+
 @login_required
 @require_http_methods(['POST'])
 def toggle_favorite(request, project_id):
@@ -53,6 +56,7 @@ def toggle_favorite(request, project_id):
 
     return JsonResponse({'status': 'ok', 'favorited': favorited})
 
+
 @login_required
 def favorite_projects(request):
     """Страница избранных проектов"""
@@ -64,6 +68,7 @@ def favorite_projects(request):
 
     context = {'projects': projects_page}
     return render(request, 'projects/favorite_projects.html', context)
+
 
 @login_required
 @require_http_methods(['POST'])
@@ -78,6 +83,7 @@ def complete_project(request, project_id):
 
     return JsonResponse({'status': 'error', 'message': 'Проект уже завершён'}, status=400)
 
+
 @login_required
 @require_http_methods(['POST'])
 def toggle_participate(request, project_id):
@@ -87,7 +93,7 @@ def toggle_participate(request, project_id):
     # Нельзя участвовать в своём проекте
     if request.user == project.owner:
         return JsonResponse({
-            'status': 'error', 
+            'status': 'error',
             'message': 'Вы автор проекта'
         }, status=400)
 
@@ -127,6 +133,7 @@ def toggle_participate(request, project_id):
         'participants_html': participants_html
     })
 
+
 @login_required
 def create_project(request):
     """Создание проекта"""
@@ -145,6 +152,7 @@ def create_project(request):
         'form': form,
         'is_edit': False
     })
+
 
 @login_required
 def edit_project(request, project_id):

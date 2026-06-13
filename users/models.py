@@ -8,6 +8,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from PIL import Image, ImageDraw, ImageFont
 
+
 class UserManager(BaseUserManager):
     '''Менеджер для модели User, обеспечивающий создание пользователей и суперпользователей.'''
     def create_user(self, email, name, surname, password=None, **extra_fields):
@@ -26,6 +27,7 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
         return self.create_user(email, name, surname, password, **extra_fields)
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     '''Модель пользователя с расширенными полями и функционалом генерации аватарки.'''

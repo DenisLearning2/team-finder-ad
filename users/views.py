@@ -8,6 +8,7 @@ from projects.models import Project
 from .models import User
 from .forms import RegistrationForm, LoginForm, EditProfileForm, CustomPasswordChangeForm
 
+
 def register_view(request):
     """Регистрация пользователя"""
     if request.method == 'POST':
@@ -22,6 +23,7 @@ def register_view(request):
         form = RegistrationForm()
 
     return render(request, 'users/register.html', {'form': form})
+
 
 def login_view(request):
     """Вход в систему"""
@@ -40,10 +42,12 @@ def login_view(request):
 
     return render(request, 'users/login.html', {'form': form})
 
+
 def logout_view(request):
     """Выход из системы"""
     logout(request)
     return redirect('projects:project_list')
+
 
 def user_detail(request, user_id):
     """Страница пользователя"""
@@ -58,6 +62,7 @@ def user_detail(request, user_id):
         'is_owner': is_owner,
     }
     return render(request, 'users/user-details.html', context)
+
 
 @login_required
 def edit_profile(request):
@@ -77,6 +82,7 @@ def edit_profile(request):
 
     return render(request, 'users/edit_profile.html', {'form': form})
 
+
 @login_required
 def change_password(request):
     """Смена пароля"""
@@ -90,6 +96,7 @@ def change_password(request):
         form = CustomPasswordChangeForm(user=request.user)
 
     return render(request, 'users/change_password.html', {'form': form})
+
 
 def user_list(request):
     """Список пользователей с фильтрацией"""

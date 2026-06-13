@@ -4,12 +4,14 @@ from django.conf import settings
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 
+
 def validate_github_url(value):
     """Проверяет, что ссылка ведёт на GitHub"""
     if value and value.strip():
         URLValidator()(value)
         if 'github.com' not in value.lower():
             raise ValidationError('Ссылка должна вести на GitHub')
+
 
 class Project(models.Model):
     '''Модель проекта'''

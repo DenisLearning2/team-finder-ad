@@ -3,12 +3,14 @@ from django import forms
 from django.contrib.auth.forms import PasswordChangeForm
 from .models import User
 
+
 class RegistrationForm(forms.ModelForm):
     '''Form for user registration.'''
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': 'form-control'}),
         label='Пароль'
     )
+
     # pylint: disable=too-few-public-methods
     class Meta:
         '''Meta class for RegistrationForm.'''
@@ -35,10 +37,12 @@ class RegistrationForm(forms.ModelForm):
             user.save()
         return user
 
+
 class LoginForm(forms.Form):
     '''Form for user login.'''
     email = forms.EmailField(label='Email')
     password = forms.CharField(widget=forms.PasswordInput, label='Пароль')
+
 
 class EditProfileForm(forms.ModelForm):
     '''Form for editing user profile.'''
@@ -47,6 +51,7 @@ class EditProfileForm(forms.ModelForm):
         required=False,
         widget=forms.FileInput(attrs={'class': 'form-control'})
     )
+
     # pylint: disable=too-few-public-methods
     class Meta:
         '''Meta class for EditProfileForm.'''
@@ -95,6 +100,7 @@ class EditProfileForm(forms.ModelForm):
                 raise forms.ValidationError('Пользователь с таким номером телефона уже существует')
 
         return phone
+
     # pylint: disable=duplicate-code
     def clean_github_url(self):
         '''Validate the GitHub URL.'''
@@ -103,6 +109,7 @@ class EditProfileForm(forms.ModelForm):
             if 'github.com' not in url.lower():
                 raise forms.ValidationError('Ссылка должна вести на GitHub')
         return url
+
 
 class CustomPasswordChangeForm(PasswordChangeForm):
     '''Form for changing user password.'''
